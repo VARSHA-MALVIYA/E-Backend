@@ -56,7 +56,7 @@ export const addAppointment = async(req,res) => {
         const updatedUser = await User.findByIdAndUpdate(
                                             origUserId,
                                             {
-                                                $push:{appointments:appointment._id}
+                                                $push:{Appointments:appointment._id}
                                             },
                                             {new:true});
 
@@ -85,7 +85,7 @@ export const getAppointmentDetails = async(req,res) => {
     try {
 
         // data fetch karo req se
-        const {userId} = req.body ; 
+        const {userId} = req ; 
 
         const userid = new mongoose.Types.ObjectId(userId);
         
@@ -98,7 +98,7 @@ export const getAppointmentDetails = async(req,res) => {
             })
         }
 
-        const user = await User.findById(userid).populate("appointments") ;
+        const user = await User.findById(userid).populate("Appointments") ;
 
         if(!user)
         {
@@ -110,7 +110,7 @@ export const getAppointmentDetails = async(req,res) => {
 
 
         // appointment ki details le lo 
-        const appointmentDetails = user.appointments ;
+        const appointmentDetails = user.Appointments ;
 
         if(!appointmentDetails)
         {
@@ -168,18 +168,21 @@ export const getAppointmentDetailsByTicketOrEmail = async(req,res) => {
                                                 }
                                             })
                                             .exec();
+            byTicket=true
         }
         else{
 
-            let UserAppointments = await User.findOne({email:email}).populate({
-                path: 'appointments',
+            let UserAppointments = await User.findOne({Email:email}).populate({
+                path: 'Appointments',
                 populate: [
                   { path: 'user' },
                   { path: 'waste', populate: 'preciousMetals' }
                 ]
             });
 
-            appointments = UserAppointments.appointments ;
+            appointments = UserAppointments.Appointments ;
+
+            byEmail=true
         }
 
         if(!appointments)

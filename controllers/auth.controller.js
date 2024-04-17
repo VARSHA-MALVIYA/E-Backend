@@ -8,7 +8,7 @@ configDotenv();
 export const signupHandler = async(req,res) => {
         
     try {
-        const {Email, Password, Name, Username} = req.body ;
+        const {Email, Password, Name, Username, Role} = req.body ;
         
         // some validations
         if(!Email || !Password || !Name || !Username)
@@ -32,11 +32,13 @@ export const signupHandler = async(req,res) => {
         // encrypting user password ;
         const hashedPassword = await bcrypt.hash(Password,10);
 
+
         const savedUser = await User.create({
             Email:Email,
             Name:Name,
             Username:Username,
             Password:hashedPassword,
+            Role: Role? Role : "Normal" ,
         });
 
         return res.status(200).json({

@@ -2,6 +2,9 @@ import EducationalPopup from '../models/educationalPopup.model.js'
 import PreciousMetals from '../models/preciousMetal.model.js'
 import Wastes from '../models/waste.model.js'
 import Category from '../models/category.model.js'
+import User from '../models/user.model.js'
+import mongoose from 'mongoose'
+
 
 export const addEwasteDetails = async (req,res) => {
     try {
@@ -138,6 +141,48 @@ export const addCategory = async (req,res) => {
         return res.status(500).json({
             success:false,
             message:"Something went wrong in addCategory handler",
+        })
+    }
+}
+
+export const getUnapprovedOperators = async(req,res)=>{
+    try {
+
+        const unapprovedOperators = await User.find({Role:"Operator",Approved:false})
+
+        return res.status(200).json(unapprovedOperators);
+        
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Something went wrong in getUnapprovedOperators handler",
+        })
+    }
+}
+
+export const approveOperator = async(req,res)=>{
+    try {
+
+        let {id} = req.body ;
+
+        id =new mongoose.Types.ObjectId(id);
+
+        await User.findByIdAndUpdate(
+            {_id:id},
+            {$set : {Approved:true} },
+            {new:true}
+        )
+
+        return res.status(200).json({
+            success:true,
+            message:"Operator Approved Successfully"
+        });
+        
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Something went wrong in approveOperator handler",
+            error:error.message
         })
     }
 }

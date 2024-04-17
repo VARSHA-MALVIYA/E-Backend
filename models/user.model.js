@@ -25,6 +25,31 @@ const userSchema = new mongoose.Schema({
         required:true,
     },
 
+    Wastes : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Waste",
+        }
+    ],
+
+    Role : {
+        type : String,
+        required:true,
+        enum : ["Normal","Operator","Admin"],
+    },
+
+    Approved : {
+        type:Boolean,
+        default:false,
+    },
+
+    Appointments : [
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Appointment"
+        }
+    ],
+
     
 },{timestamps:true}) ;
 

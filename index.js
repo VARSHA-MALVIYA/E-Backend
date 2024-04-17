@@ -8,7 +8,12 @@ import DataBaseConnect from "./config/dbConnect.js";
 import AuthRoutes from './routes/auth.routes.js'
 import WasteRoutes from './routes/waste.routes.js'
 import AdminRoutes from './routes/admin.routes.js'
+import AppointmentRoutes from './routes/appointment.routes.js'
+import CategoryRoutes from './routes/category.routes.js'
+import EducationalPopupRoutes from './routes/educationalpopup.routes.js'
+
 import { addUserToReq } from "./middleware/auth.middleware.js";
+
 
 
 // configs
@@ -27,11 +32,11 @@ app.use(cors({origin: 'http://localhost:5173',credentials: true}));
 app.use("/api/v1/auth",AuthRoutes);
 app.use("/api/v1/waste",WasteRoutes);
 app.use("/api/v1/admin",AdminRoutes);
+app.use("/api/v1/appointment",AppointmentRoutes);
+app.use("/api/v1/category",CategoryRoutes);
+app.use("/api/v1/educationalPopup",EducationalPopupRoutes);
 
-app.use('/test',addUserToReq,async(req,res)=>{
-    console.log("got this userId => ",req.userId)
-    res.send(`got this userId -> ${req.userId}` )
-});
+
 
 
 // listen

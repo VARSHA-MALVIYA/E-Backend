@@ -6,9 +6,6 @@ import mongoose from 'mongoose';
 export const addUserToReq = async(req,res,next) => {
     try {
 
-        console.log("cookie ye he....")
-        console.log(req.cookies);
-
         const token = req.body?.token || 
                       req.cookies?.token ||
                       req.headers['authorization']?.split(' ')[1] ;
@@ -24,6 +21,8 @@ export const addUserToReq = async(req,res,next) => {
         const userId = new mongoose.Types.ObjectId(decoded.userId);
 
         req.userId = userId;
+
+        console.log("got this userId in middleware -> ",userId)
     
         next();
         
