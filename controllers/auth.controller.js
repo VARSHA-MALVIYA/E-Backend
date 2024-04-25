@@ -11,7 +11,7 @@ export const signupHandler = async(req,res) => {
         const {Email, Password, Name, Username, Role} = req.body ;
         
         // some validations
-        if(!Email || !Password || !Name || !Username)
+        if(!Email || !Password || !Name )
         {
             return res.status(500).json({
                 success:false,

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import EducationalPopup  from '../models/educationalPopup.model.js';
 
 export const addEducationalPopup = async(req,res) => {
@@ -34,16 +35,47 @@ export const addEducationalPopup = async(req,res) => {
     }
 }
 
+export const updateEducationalPopup = async(req,res) => {
+    try {
+        
+        const {title , description, _id} = req.body ;
+        const id = new mongoose.Types.ObjectId(_id);
+
+        if(!title || !description || !id)
+        {
+            return res.status(500).json({
+                success:false,
+                message:"All information not found in updateEducationalPopup backend",
+            })
+        }
+
+        const updatedPopup = await EducationalPopup.findByIdAndUpdate(
+            {_id:id},
+            { $set : { title:title, description:description } },
+            {new:true}
+        )
+
+        return res.status(200).json({
+            success:true,
+            message:"Popup Updated Successfully" ,
+            updatedPopup:updatedPopup,
+        })
+        
+
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Something went wrong in updateEducationalPopup backend",
+            error : error.message 
+        })
+    }
+}
+
 export const getAllEducationalPopupDetails = async(req,res) => {
     try {
 
         const allDetails = await EducationalPopup.find({}) ;
-        
-        return res.status(200).json({
-            success:true,
-            message:"These are all EducationalPopupDetails",
-            data: allDetails,
-        })
+        return res.status(200).json(allDetails)
         
     } catch (error) {
         return res.status(500).json({

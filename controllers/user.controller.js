@@ -4,6 +4,9 @@ import Wastes from '../models/waste.model.js'
 import Category from '../models/category.model.js'
 import User from '../models/user.model.js'
 import mongoose from 'mongoose'
+import { OperatorApprovedTemplate } from '../MailTemplates/operatorApproved.template.js'
+import { sendEmail } from '../utils/mailSender.js'
+import { ContactUsTemplate } from '../MailTemplates/contactUs.template.js'
 
 
 export const addEwasteDetails = async (req,res) => {
@@ -167,11 +170,14 @@ export const approveOperator = async(req,res)=>{
 
         id =new mongoose.Types.ObjectId(id);
 
-        await User.findByIdAndUpdate(
+        const user = await User.findByIdAndUpdate(
             {_id:id},
             {$set : {Approved:true} },
             {new:true}
         )
+
+        const mailHTML = OperatorApprovedTemplate(user.Name);
+        sendEmail(user.Email,"EcoGeeks","Approval For Operator Role",mailHTML);
 
         return res.status(200).json({
             success:true,
@@ -183,6 +189,25 @@ export const approveOperator = async(req,res)=>{
             success:false,
             message:"Something went wrong in approveOperator handler",
             error:error.message
+        })
+    }
+}
+
+export const contactUs = async(req,res) => {
+    try {
+        const {firstName,lastName,email,message} = req.body;
+        const mailHTML = ContactUsTemplate(firstName,lastName,email,message) 
+        sendEmail('vijayrathore2003@gmail.com',"EcoGeeks","Contact Us",mailHTML)
+
+        return res.status(200).json({
+            success:true,
+            message:"Message sent successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Some error in contactUs backend",
+            error:error.message,
         })
     }
 }
@@ -243,7 +268,6 @@ export const bulkEwasteAdd = async(req,res) => {
         }) 
     }
 }
-
 
 
 // functions 

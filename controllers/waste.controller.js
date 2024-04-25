@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Waste from '../models/waste.model.js'
+import PreciousMetal from "../models/preciousMetal.model.js";
 
 export const getEwastesCategory = async(req,res) => {
     try {
@@ -97,7 +98,6 @@ export const getDeviceDetailsById = async(req,res) => {
     }
 }
 
-
 export const getDeviceDetails = async(req,res) => {
 
     try {
@@ -128,6 +128,53 @@ export const getDeviceDetails = async(req,res) => {
         return res.status(500).json({
             success:false,
             message:"error in getDeviceDetails controller",
+        })
+    }
+}
+
+export const getAllDevices = async(req,res) => {
+    try {
+        const allDevices = await Waste.find({}).populate("preciousMetals")
+        return res.status(200).json(allDevices)
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+export const updateDeviceInfo = async(req,res) => {
+    try {
+        const {name,category,preciousMetals,modelNumber,greenPoints,_id} = req.body;
+        const id = new mongoose.Types.ObjectId(_id);
+
+        const updatedDevice = await Waste.findByIdAndUpdate(
+            {_id:id},
+            { $set : {
+                name:name,
+                category:category,
+                modelNumber:modelNumber,
+                greenPoints:greenPoints,
+            } },
+            {new:true}
+        )
+
+        for(const metal of preciousMetals)
+        {
+            await PreciousMetal.findByIdAndUpdate(
+                {_id:metal._id},
+                { $set : { name:metal.name , weight:metal.weight } },
+                {new:true}
+            )
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"Updated data successfully",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Something went wrong in updateDeviceInfo",
+            error:error.message
         })
     }
 }

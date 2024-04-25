@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
 
     Username : {
         type:String,
-        required:true,
     },
 
     Email : {
@@ -50,7 +49,19 @@ const userSchema = new mongoose.Schema({
         }
     ],
 
-    
+    GreenPoints : {
+        type:Number,
+        default:0,
+    },
+
+
+    Order:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Order"
+        }
+    ]
+ 
 },{timestamps:true}) ;
 
 const User =  mongoose.model("User",userSchema);

@@ -36,6 +36,11 @@ const appointmentSchema = new mongoose.Schema({
    ticket:{
       type:String,
       required:true,
+   },
+
+   processed:{
+      type:Boolean,
+      default:false,
    }
 
 },{timestamps:true}) ;

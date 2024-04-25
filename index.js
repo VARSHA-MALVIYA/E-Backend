@@ -11,6 +11,8 @@ import AdminRoutes from './routes/admin.routes.js'
 import AppointmentRoutes from './routes/appointment.routes.js'
 import CategoryRoutes from './routes/category.routes.js'
 import EducationalPopupRoutes from './routes/educationalpopup.routes.js'
+import ProductRoutes from './routes/product.routes.js'
+import OrderRoutes from './routes/order.routes.js'
 
 import { addUserToReq } from "./middleware/auth.middleware.js";
 
@@ -35,7 +37,8 @@ app.use("/api/v1/admin",AdminRoutes);
 app.use("/api/v1/appointment",AppointmentRoutes);
 app.use("/api/v1/category",CategoryRoutes);
 app.use("/api/v1/educationalPopup",EducationalPopupRoutes);
-
+app.use("/api/v1/product",ProductRoutes);
+app.use("/api/v1/order",OrderRoutes);
 
 
 

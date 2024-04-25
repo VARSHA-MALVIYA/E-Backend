@@ -62,8 +62,8 @@ export const addAppointment = async(req,res) => {
 
         
         // send email 
-        const mailHTML = AppointmentMailTemplate(appointmentData);
-        sendEmail(updatedUser.Email,"EcoGeeks","Regarding Appointment",mailHTML);
+        const mailHTML = AppointmentMailTemplate(updatedUser.Name,date,time,centerAddress,centerName,uniqueTicket);
+        sendEmail(updatedUser.Email,"EcoGeeks","Appointment Confirmation Mail",mailHTML);
 
         return res.status(200).json({
             success:true,
@@ -225,31 +225,25 @@ export const processAppointment = async(req,res) => {
         const user_id = new mongoose.Types.ObjectId(userId);
         const appointmentIdToRemove = new mongoose.Types.ObjectId(appointmentId);
 
-
-        console.log("getting this in process :");
-        console.log(user_id)
-        console.log(appointmentIdToRemove)
-        console.log(greenPoints)
-
-        console.log("GP Type -> ",typeof greenPoints);
-
-        const user = await User.findById(user_id);
-        const prevGreenPoints = user.greenPoints ;
-
-        console.log("this is DT of prevGreenPoints",prevGreenPoints)
-        console.log("this is DT of greenPoints",greenPoints)
-        console.log("this is + -> ",prevGreenPoints+greenPoints);
+        
+        const user = await User.findById(user_id) ;
+        const prevGreenPoints = user.GreenPoints ;
 
         const updatedUser = await User.findByIdAndUpdate(
             {_id:user_id},
             { 
-                $set: { greenPoints: prevGreenPoints+greenPoints }, // Update greenpoint value
-                $pull: { appointments: appointmentIdToRemove } 
+                $set: { GreenPoints: prevGreenPoints+greenPoints }, // Update greenpoint value 
             },
             {new:true}
         );
 
-        await Appointment.findByIdAndDelete(appointmentIdToRemove);
+        const updatedAppointment = await Appointment.findByIdAndUpdate(
+            {_id:appointmentIdToRemove},
+            {
+                $set : {processed:true}
+            },
+            {new:true}
+        )
 
         return res.status(200).json({
             success:true,
