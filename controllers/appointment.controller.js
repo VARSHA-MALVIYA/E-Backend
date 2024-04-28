@@ -98,7 +98,12 @@ export const getAppointmentDetails = async(req,res) => {
             })
         }
 
-        const user = await User.findById(userid).populate("Appointments") ;
+        const user = await User.findById(userid).populate({
+                                                    path: 'Appointments',
+                                                    populate: {
+                                                        path: 'waste'
+                                                    }
+                                                });
 
         if(!user)
         {
