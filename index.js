@@ -27,7 +27,7 @@ DataBaseConnect(); //db connection.
 // middlewares
 app.use(cookieparser());
 app.use(express.json()) ;
-app.use(cors({origin: 'https://ecogeek.netlify.app/',credentials: true}));
+app.use(cors({origin: 'https://ecogeek.netlify.app',credentials: true}));
 
 
 // routes
