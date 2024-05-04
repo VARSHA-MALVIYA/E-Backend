@@ -85,21 +85,15 @@ export const loginHandler = async(req,res) => {
 
         const token =  jwt.sign({ userId: user._id  }, process.env.JWT_SECRET_KEY);
 
-        // const cookieOption = {
-        //     maxAge: (24*60*60*1000) * 3 ,
-        //     httpOnly:false,
-        // }
 
         const cookieOptions = {
             secure: false,    // Cookie will only be sent over HTTPS
             httpOnly: false,  // Cookie cannot be accessed by client-side JavaScript
-            // sameSite: "None", // Allows the cookie to be sent in cross-origin requests
+            sameSite: "None", // Allows the cookie to be sent in cross-origin requests
             path: "/"        // Cookie will be accessible to all paths on the domain
         };
 
         res.cookie('token',token,cookieOptions);
-        // res.cookie('name',"vijayrathore2003",cookieOption);
-        console.log("this is cookie....")
         
         return res.status(200).json({
             success:true,
