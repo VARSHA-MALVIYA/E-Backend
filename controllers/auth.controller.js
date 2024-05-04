@@ -89,7 +89,7 @@ export const loginHandler = async(req,res) => {
         const cookieOptions = {
             secure: false,    // Cookie will only be sent over HTTPS
             httpOnly: false,  // Cookie cannot be accessed by client-side JavaScript
-            sameSite: "None", // Allows the cookie to be sent in cross-origin requests
+            // sameSite: "None", // Allows the cookie to be sent in cross-origin requests
             path: "/"        // Cookie will be accessible to all paths on the domain
         };
 
