@@ -7,6 +7,7 @@ import mongoose from 'mongoose'
 import { OperatorApprovedTemplate } from '../MailTemplates/operatorApproved.template.js'
 import { sendEmail } from '../utils/mailSender.js'
 import { ContactUsTemplate } from '../MailTemplates/contactUs.template.js'
+import Message from '../models/message.model.js'
 
 
 export const addEwasteDetails = async (req,res) => {
@@ -196,6 +197,14 @@ export const approveOperator = async(req,res)=>{
 export const contactUs = async(req,res) => {
     try {
         const {firstName,lastName,email,message} = req.body;
+
+        const addedMessage = await Message.create({
+            email:email,
+            message:message,
+            firstName:firstName,
+            lastName:lastName,
+        })
+
         const mailHTML = ContactUsTemplate(firstName,lastName,email,message) 
         sendEmail('vijayrathore2003@gmail.com',"EcoGeeks","Contact Us",mailHTML)
 
@@ -212,7 +221,22 @@ export const contactUs = async(req,res) => {
     }
 }
 
-// edit krna he abhi
+export const getAllMessages = async(req,res) => {
+    try {
+        const allMessages = await Message.find({})
+        return res.status(200).json({
+            success:false,
+            messages:allMessages,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:true,
+            error:error.message
+        })
+    }
+}
+
+
 export const bulkEwasteAdd = async(req,res) => {
     try {
 
