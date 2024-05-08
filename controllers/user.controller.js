@@ -225,12 +225,12 @@ export const getAllMessages = async(req,res) => {
     try {
         const allMessages = await Message.find({})
         return res.status(200).json({
-            success:false,
+            success:true,
             messages:allMessages,
         })
     } catch (error) {
         return res.status(500).json({
-            success:true,
+            success:false,
             error:error.message
         })
     }
